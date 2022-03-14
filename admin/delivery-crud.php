@@ -14,12 +14,13 @@ if (isset($_POST['action'])){
 	if ($_POST['action'] == "add"){
 	
 		$jobid = (!empty($_POST['inputJobID'])) ? $_POST['inputJobID'] : NULL;
+		$DeliveryType = 1;
 		$description = $_POST['inputDescription'];
 		$deliverydate = (!empty($_POST['inputDeliveryDate'])) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inputDeliveryDate']))) : NULL;
 		$notes = $_POST['inputNotes'];
 
-		$insert_stmt = $mysqli->prepare("INSERT INTO tblDelivery (JobID, Description, DeliveryDate, Notes) VALUES (?, ?, ?, ?)");
-		$insert_stmt->bind_param('isss', $jobid, $description, $deliverydate, $notes); 
+		$insert_stmt = $mysqli->prepare("INSERT INTO tblDelivery (JobID, Description, DeliveryDate, Notes, DeliveryType) VALUES (?, ?, ?, ?, ?)");
+		$insert_stmt->bind_param('isssi', $jobid, $description, $deliverydate, $notes, $DeliveryType); 
 		$insert_stmt->execute();
 				
 		if ($insert_stmt->affected_rows != -1){

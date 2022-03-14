@@ -1,7 +1,7 @@
-﻿body {
+﻿/*body {
   padding-top: 30px;
 }
-
+*/
 .navbar-brand{
 	padding:0;
 }
@@ -34,7 +34,11 @@ input[readonly] {
 	background-color: #fff;
 }
 
-.navbar .active > a { background:#CE1500!important } 
+.navbar .active > a { background:#CE1500!important; color: #fff !important; } 
+
+.widget-menu .active > a { background:#CE1500!important; color: #fff;} 
+
+.widget-menu .active > a i { color: #fff !important} 
 
 .navbar-inverse{
 	background-color:#000;
@@ -118,10 +122,10 @@ h1 .pageTitle{
 	padding-top: 30px !important;
 }
 
-.entry .add-entry-btn { display:none;}
-.entry:hover .add-entry-btn { display:inline-block;}
+.entry .add-entry-btn,.entry .staff-add-entry-btn,.entry .staff-calendar-entry,.entry .delivery-staff-calendar-entry { display:none;}
+.entry:hover .add-entry-btn,.entry:hover .staff-add-entry-btn,.entry:hover .staff-calendar-entry,.entry:hover .delivery-staff-calendar-entry { display:inline-block;}
 
-.add-entry-btn{
+.add-entry-btn,.staff-add-entry-btn,.staff-calendar-entry,.delivery-staff-calendar-entry{
 	position: absolute;
 	top: 5px;
 	right: 8px;
@@ -130,4 +134,41 @@ h1 .pageTitle{
 .pagination-nav{
 	display: flex;
   justify-content: center;
+}
+
+.fa-sort-desc{
+	font-size: 20px !important;
+	cursor: pointer;
+	height: 0;
+}
+
+.fa-sort-asc{
+	font-size: 20px !important;
+	cursor: pointer;
+	height: 5px;
+}
+
+.sort-icon{
+	display: inline-grid;
+	margin-left: 5px;
+}
+
+.nav-collapse.navbar-inverse-collapse {
+    display: block;
+    padding: 10px 20px 10px;;
+}
+
+
+.name-bg-custom
+{
+	background: #d5b591 !important;
+}
+
+.table-responsive td a {
+	color: #333 !important;
+	text-decoration: none !important;
+}
+.job-history-icon-custom
+{
+	color:#fff !important;
 }

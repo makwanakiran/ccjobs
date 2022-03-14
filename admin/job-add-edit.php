@@ -15,11 +15,11 @@ if (isset($_POST['action']))
 		
 		$jobid = isset($_POST['jobid']) ? $_POST['jobid'] : die('ERROR: Job ID not found.');
 
-		if ($stmt = $mysqli->prepare("SELECT JobID,ProjectID, JobAddress, Builder, DateMeasure, MeasureBy FROM tblJob WHERE JobID = ? LIMIT 1")) { 
+		if ($stmt = $mysqli->prepare("SELECT JobID,ProjectID, JobAddress, Builder, DateMeasure, MeasureBy,status FROM tblJob WHERE JobID = ? LIMIT 1")) { 
 			$stmt->bind_param('i', $jobid);
 			$stmt->execute();
 			$stmt->store_result();
-			$stmt->bind_result($formjobid,$projectId, $formjobaddress, $formbuilder, $formdatemeasure, $formmeasureby);
+			$stmt->bind_result($formjobid,$projectId, $formjobaddress, $formbuilder, $formdatemeasure, $formmeasureby,$status);
 			$stmt->fetch();
 		}
 	}
@@ -85,7 +85,33 @@ if (isset($_POST['action']))
 			?>
 		</select>
 	</div>
+	<?php 
+	if ($_POST['action'] == "edit"){
+	?>
+	<div class="form-group">
+		<label for="status">Job Status</label>
+		
+		<select id="status" name="status" class="form-control">
+			<option value="" disabled>None</option>
+			<?php
+			$opneChecked = '';
+			$closeChecked = '';
 
+				if($status == 1)
+				{
+					$opneChecked = "selected";
+				}
+				elseif($status == 2)
+				{
+					$closeChecked = "selected";
+				}
+
+			?>
+			<option value="1" <?php echo $opneChecked; ?>>Open</option>
+			<option value="2" <?php echo $closeChecked; ?>>Close</option>
+		</select>
+	</div>
+	<?php } ?>
     <button type="submit" id="save-btn" class="btn btn-primary">Save</button>
 	<button type="button" id="return-btn" class="btn btn-warning">Return</button>
 	

@@ -59,7 +59,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 								<div class="col-sm-4">
 									<div class="alert alert-warning" role="alert">
 										<div class="row">
-											<div class="col-xs-3"><i class="fa fa-clock-o fa-5x text-warning"></i></div>
+											<div class="col-xs-3"><i class="fa fa-clock-o fa-4x text-warning"></i></div>
 											<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Measured</strong><br>" . date('d-m-Y', strtotime($row['DateStarted'])) . "<br>by " . get_name_from_id($row['StartedBy'], $mysqli) ?></div>
 										</div>
 										<div class="row">
@@ -75,7 +75,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-info' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-list-ol fa-5x text-info"></i></div>
+													<div class="col-xs-3"><i class="fa fa-list-ol fa-4x text-info"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Drawing Started</strong><br>" . date('d-m-Y', strtotime($row['DateDrawn'])) . "<br>by " . get_name_from_id($row['DrawnBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -91,7 +91,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-success' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-check-square-o fa-5x text-success"></i></div>
+													<div class="col-xs-3"><i class="fa fa-check-square-o fa-4x text-success"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Sent To CNC</strong><br>" . date('d-m-Y', strtotime($row['DateCompleted'])) . "<br>by " . get_name_from_id($row['CompletedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -131,7 +131,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-success' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-check-square-o fa-5x text-success"></i></div>
+													<div class="col-xs-3"><i class="fa fa-check-square-o fa-4x text-success"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>CNC Completed</strong><br>" . date('d-m-Y', strtotime($row['CNCDateCompleted'])) . "<br>by " . get_name_from_id($row['CNCCompletedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -149,7 +149,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-success' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-check-square-o fa-5x text-success"></i></div>
+													<div class="col-xs-3"><i class="fa fa-check-square-o fa-4x text-success"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Edging Completed</strong><br>" . date('d-m-Y', strtotime($row['EdgingDateCompleted'])) . "<br>by " . get_name_from_id($row['EdgingCompletedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -188,7 +188,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 								<div class="col-sm-4">
 									<div class="alert alert-warning" role="alert">
 										<div class="row">
-											<div class="col-xs-3"><i class="fa fa-clock-o fa-5x text-warning"></i></div>
+											<div class="col-xs-3"><i class="fa fa-clock-o fa-4x text-warning"></i></div>
 											<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Started</strong><br>" . date('d-m-Y', strtotime($row['DateStarted'])) . "<br>by " . get_name_from_id($row['StartedBy'], $mysqli) ?></div>
 										</div>
 										<div class="row">
@@ -205,7 +205,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-info' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-list-ol fa-5x text-info"></i></div>
+													<div class="col-xs-3"><i class="fa fa-list-ol fa-4x text-info"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Checked</strong><br>" . date('d-m-Y', strtotime($row['DateChecked'])) . "<br>by " . get_name_from_id($row['CheckedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -221,7 +221,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-success' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-check-square-o fa-5x text-success"></i></div>
+													<div class="col-xs-3"><i class="fa fa-check-square-o fa-4x text-success"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Completed</strong><br>" . date('d-m-Y', strtotime($row['DateCompleted'])) . "<br>by " . get_name_from_id($row['CompletedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -256,7 +256,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-info' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-list-ol fa-5x text-info"></i></div>
+													<div class="col-xs-3"><i class="fa fa-list-ol fa-4x text-info"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Checked</strong><br>" . date('d-m-Y', strtotime($row['DateChecked'])) . "<br>by " . get_name_from_id($row['CheckedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -276,7 +276,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-success' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-check-square-o fa-5x text-success"></i></div>
+													<div class="col-xs-3"><i class="fa fa-check-square-o fa-4x text-success"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>".$completestring."</strong><br>" . date('d-m-Y', strtotime($row['DateCompleted'])) . "<br>by " . get_name_from_id($row['CompletedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -311,7 +311,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-info' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-list-ol fa-5x text-info"></i></div>
+													<div class="col-xs-3"><i class="fa fa-list-ol fa-4x text-info"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Sent To Maintenance</strong><br>" . date('d-m-Y', strtotime($row['DateStarted'])) . "<br>by " . get_name_from_id($row['StartedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">
@@ -327,7 +327,7 @@ if ($stmt = $mysqli->prepare("SELECT JobID, JobAddress FROM tblJob WHERE JobID =
 										<div class='col-sm-4'>
 											<div class='alert alert-success' role='alert'>
 												<div class="row">
-													<div class="col-xs-3"><i class="fa fa-check-square-o fa-5x text-success"></i></div>
+													<div class="col-xs-3"><i class="fa fa-check-square-o fa-4x text-success"></i></div>
 													<div class="col-xs-9" style="vertical-align: middle;"><?php echo "<strong>Completed</strong><br>" . date('d-m-Y', strtotime($row['DateCompleted'])) . "<br>by " . get_name_from_id($row['CompletedBy'], $mysqli) ?></div>
 												</div>
 												<div class="row">

@@ -45,6 +45,12 @@
 			<div class="col-xs-9 col-sm-3">
 				<img src="img/logo_large.png" class="img-responsive" alt="Challenge Cabinets">
 				<br>
+				<!---<ul>
+                    <li>ADD Archive/complete Feature</li>
+                    <li>Default Show lastest job first - Sort on Table Columns</li>
+                    <li>??? The ability to filter/sort on Projects</li>
+                    <li>??? Show Project name in Table</li>
+                </ul>--->
 			</div>
 			<div class="col-sm-9">
 				<ul class="nav nav-pills pull-right">

@@ -97,16 +97,17 @@ if (isset($_POST['action'])){
 
 			$jobid = $_POST['jobid'];
 			$taskid = $_POST['taskid'];
-			$gapped = isset($_POST['inputGapped']) ? $_POST['inputGapped'] : 0;
+			/*$gapped = isset($_POST['inputGapped']) ? $_POST['inputGapped'] : 0;
 			$capped = isset($_POST['inputCapped']) ? $_POST['inputCapped'] : 0;
 			$adjusteddoorsdrawers = isset($_POST['inputAdjustedDoorsDrawers']) ? $_POST['inputAdjustedDoorsDrawers'] : 0;
 			$benchtopstemplatesinstalled = isset($_POST['inputBenchtopsTemplatesInstalled']) ? $_POST['inputBenchtopsTemplatesInstalled'] : 0;
 			$basinsinstalled = isset($_POST['inputBasinsInstalled']) ? $_POST['inputBasinsInstalled'] : 0;
 			$alllevelschecked = isset($_POST['inputAllLevelsChecked']) ? $_POST['inputAllLevelsChecked'] : 0;
 			$ovencleats = isset($_POST['inputOvenCleats']) ? $_POST['inputOvenCleats'] : 0;
-			$cabinetscleaned = isset($_POST['inputCabinetsCleaned']) ? $_POST['inputCabinetsCleaned'] : 0;			
+			$cabinetscleaned = isset($_POST['inputCabinetsCleaned']) ? $_POST['inputCabinetsCleaned'] : 0;*/			
 		
 			$missingitems = trim($_POST['inputMissingItems']);
+			$Applicabletems = trim($_POST['inputApplicableItems']);
 			$missingitemscomplete = isset($_POST['inputMissingItemsComplete']) ? $_POST['inputMissingItemsComplete'] : 0;
 
 			//check if date checked has already been set
@@ -123,8 +124,10 @@ if (isset($_POST['action'])){
 				$checkedby = $_SESSION['user_id'];
 			//}
 
-			$update_stmt = $mysqli->prepare("UPDATE tblJobTaskInstall SET Gapped = ?, Capped = ?, AdjustedDoorsDrawers = ?, BenchtopsTemplatesInstalled = ?, BasinsInstalled = ?, AllLevelsChecked = ?, OvenCleats = ?, CabinetsCleaned = ?, MissingItems = ?, MissingItemsComplete = ?, DateChecked = ?, CheckedBy = ? WHERE JobID = ? AND TaskID = ?");
-			$update_stmt->bind_param('iiiiiiiisissii', $gapped, $capped, $adjusteddoorsdrawers, $benchtopstemplatesinstalled, $basinsinstalled, $alllevelschecked, $ovencleats, $cabinetscleaned, $missingitems, $missingitemscomplete, $datechecked, $checkedby, $jobid, $taskid); 
+			/*$update_stmt = $mysqli->prepare("UPDATE tblJobTaskInstall SET Gapped = ?, Capped = ?, AdjustedDoorsDrawers = ?, BenchtopsTemplatesInstalled = ?, BasinsInstalled = ?, AllLevelsChecked = ?, OvenCleats = ?, CabinetsCleaned = ?, MissingItems = ?, MissingItemsComplete = ?, DateChecked = ?, CheckedBy = ? WHERE JobID = ? AND TaskID = ?");
+			$update_stmt->bind_param('iiiiiiiisissii', $gapped, $capped, $adjusteddoorsdrawers, $benchtopstemplatesinstalled, $basinsinstalled, $alllevelschecked, $ovencleats, $cabinetscleaned, $missingitems, $missingitemscomplete, $datechecked, $checkedby, $jobid, $taskid); */
+			$update_stmt = $mysqli->prepare("UPDATE tblJobTaskInstall SET Applicabletems=?, MissingItems = ?, MissingItemsComplete = ?, DateChecked = ?, CheckedBy = ? WHERE JobID = ? AND TaskID = ?");
+			$update_stmt->bind_param('ssissii', $Applicabletems, $missingitems, $missingitemscomplete, $datechecked, $checkedby, $jobid, $taskid); 
 			$update_stmt->execute();
 					
 			if ($update_stmt->affected_rows != -1){

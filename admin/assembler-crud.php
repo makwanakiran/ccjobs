@@ -18,18 +18,19 @@ if (isset($_POST['action'])){
 		$description = $_POST['inputDescription'];
 		$scheduledate = (!empty($_POST['inputScheduleDate'])) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inputScheduleDate']))) : NULL;
 		$notes = $_POST['inputNotes'];
+		$AssemblerType = 1;
 
-		$insert_stmt = $mysqli->prepare("INSERT INTO tblAssemblerSchedule (UserID, JobID, Description, ScheduleDate, Notes) VALUES (?, ?, ?, ?, ?)");
-		$insert_stmt->bind_param('sisss', $userid, $jobid, $description, $scheduledate, $notes); 
+		$insert_stmt = $mysqli->prepare("INSERT INTO tblAssemblerSchedule (UserID, JobID, Description, ScheduleDate, Notes, AssemblerType) VALUES (?, ?, ?, ?, ?, ?)");
+		$insert_stmt->bind_param('sisssi', $userid, $jobid, $description, $scheduledate, $notes, $AssemblerType); 
 		$insert_stmt->execute();
 				
 		if ($insert_stmt->affected_rows != -1){
-			$data['msg'] = "<div class='alert alert-success' role='alert'>The assembler schedule entry was added successfully.</div>";
+			$data['msg'] = "<div class='alert alert-success' role='alert'>The assembler staff entry was added successfully.</div>";
 			$data['last_insert_id'] = $insert_stmt->insert_id;
 			$data['action'] = "edit";
 		}
 		else{
-			$data['msg'] = "<div class='alert alert-danger' role='alert'>The assembler schedule entry could not be added</div>";
+			$data['msg'] = "<div class='alert alert-danger' role='alert'>The assembler staff entry could not be added</div>";
 			$data['action'] = "add";
 		}
 			
@@ -37,8 +38,8 @@ if (isset($_POST['action'])){
 	}
 	
 	//edit a schedule entry
-	if ($_POST['action'] == "edit"){
-
+	if ($_POST['action'] == "edit")
+	{
 		$assemblerscheduleid = $_POST['assemblerscheduleid'];
 		$userid = $_POST['inputUserID'];
 		$jobid = (!empty($_POST['inputJobID'])) ? $_POST['inputJobID'] : NULL;

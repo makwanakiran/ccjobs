@@ -18,9 +18,10 @@ if (isset($_POST['action'])){
 		$description = $_POST['inputDescription'];
 		$scheduledate = (!empty($_POST['inputScheduleDate'])) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inputScheduleDate']))) : NULL;
 		$notes = $_POST['inputNotes'];
+		$StoneType = 1;
 
-		$insert_stmt = $mysqli->prepare("INSERT INTO tblStoneSchedule (UserID, JobID, Description, ScheduleDate, Notes) VALUES (?, ?, ?, ?, ?)");
-		$insert_stmt->bind_param('sisss', $userid, $jobid, $description, $scheduledate, $notes); 
+		$insert_stmt = $mysqli->prepare("INSERT INTO tblStoneSchedule (UserID, JobID, Description, ScheduleDate, Notes, StoneType) VALUES (?, ?, ?, ?, ?, ?)");
+		$insert_stmt->bind_param('sisssi', $userid, $jobid, $description, $scheduledate, $notes, $StoneType); 
 		$insert_stmt->execute();
 				
 		if ($insert_stmt->affected_rows != -1){

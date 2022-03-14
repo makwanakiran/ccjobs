@@ -31,7 +31,7 @@ if (isset($_REQUEST["page"])) { $page  = $_REQUEST["page"]; } else { $page=1; };
 		if ($row[0] > 0 ){
 	?> 
     
-        <table class="table table-striped">
+        <table class="table table-striped bg-info shaded-icon">
             <thead>
                 <tr>
                   <th>Name</th>

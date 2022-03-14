@@ -68,38 +68,55 @@
 						<?php
 							$where = " WHERE JobID IS NOT NULL AND Deleted = 0 AND MeasureBy = '" . $_SESSION['user_id'] . "'";
 						?>
-						
+
+						<div id="page-content">
+
 						<div class="table-responsive">
-						<?php
-							$query = "SELECT COUNT(JobID) FROM tblJob Jobs $where AND COALESCE((SELECT SUM(Weight) FROM tblJobTaskDraft INNER JOIN tblTask ON tblJobTaskDraft.TaskID = tblTask.TaskID WHERE tblJobTaskDraft.JobID = Jobs.JobID AND tblJobTaskDraft.DateCompleted IS NOT NULL), 0) < 2";
+							<?php
+								$query = "SELECT COUNT(JobID) FROM tblJob Jobs $where AND COALESCE((SELECT SUM(Weight) FROM tblJobTaskDraft INNER JOIN tblTask ON tblJobTaskDraft.TaskID = tblTask.TaskID WHERE tblJobTaskDraft.JobID = Jobs.JobID AND tblJobTaskDraft.DateCompleted IS NOT NULL), 0) < 2";
+								$result = $mysqli->query($query);
+								$row = $result->fetch_array(); 
+								$total_records = $row[0];  
 
-							$result = $mysqli->query($query);
-							$row = $result->fetch_array(); 
-							$total_records = $row[0];  
-							$total_pages = ceil($total_records / $recordsperpage); 
+								$total_pages = ceil($total_records / $recordsperpage); 
 
-							if ($page > $total_pages)
-								$page = $total_pages;
+								if ($page > $total_pages)
+									$page = $total_pages;
+									
+								$start_from = ($page-1) * $recordsperpage;
 								
-							$start_from = ($page-1) * $recordsperpage;
-							
-							if ($row[0] > 0 ){
-						?> 
-						
-							<table class="table table-striped">
+								if ($row[0] > 0 ){
+							?>
+								<table class="table table-striped bg-info shaded-icon table-hover">
 								<thead>
 									<tr>
-										<th nowrap>Job No.</th>
-										<th>Address</th>
-										<th>Measure Date</th>
+										<th nowrap>
+											Job No. 
+											<span class="sort-icon">
+												<i class="fa fa-sort-asc" id="JobIDASC" data-name="JobID" data-sort="ASC" style="color:red;" aria-hidden="true"></i>
+												<i class="fa fa-sort-desc" id="JobIDDESC" data-name="JobID" data-sort="DESC" aria-hidden="true"></i>
+											</span>
+										</th>
+										<th>Address
+											<span class="sort-icon"> 
+												<i class="fa fa-sort-asc" id="JobAddressASC" data-name="JobAddress" data-sort="ASC"  aria-hidden="true"></i>
+												<i class="fa fa-sort-desc" id="JobAddressDESC" data-name="JobAddress" data-sort="DESC" aria-hidden="true"></i>
+											</span>
+										</th>
+										<th>Measure Date
+											<span class="sort-icon"> 
+												<i class="fa fa-sort-asc" id="DateMeasureASC" data-name="DateMeasure" data-sort="ASC"  aria-hidden="true"></i>
+												<i class="fa fa-sort-desc" id="DateMeasureDESC" data-name="DateMeasure" data-sort="DESC" aria-hidden="true"></i>
+											</span>
+										</th>
 										<th style="width:40px;"></th>
 									</tr>
 								</thead>
-								<tbody>
-									
+								<tbody>								
 									<?php 
 									//$query = "SELECT JobID, JobAddress, DateEntered, DateMeasure FROM tblJob $where ORDER BY DateMeasure, JobID LIMIT $start_from, $recordsperpage";
 									$query = "SELECT JobID, JobAddress, DateEntered, DateMeasure FROM tblJob Jobs $where AND COALESCE((SELECT SUM(Weight) FROM tblJobTaskDraft INNER JOIN tblTask ON tblJobTaskDraft.TaskID = tblTask.TaskID WHERE tblJobTaskDraft.JobID = Jobs.JobID AND tblJobTaskDraft.DateCompleted IS NOT NULL), 0) < 2 ORDER BY DateMeasure, JobID";
+									
 									$result = $mysqli->query($query);
 									
 									while($row = $result->fetch_array()){
@@ -107,17 +124,22 @@
 										<tr>
 											<td ><?php echo $row['JobID'] ?></td>
 											<td ><?php echo $row['JobAddress'] ?></td>  
-											<td ><?php echo date("d-m-Y", strtotime($row['DateMeasure'])) ?></td>                       											
+											<td ><?php  
+													if($row['DateMeasure']){
+														echo date("d-m-Y", strtotime($row['DateMeasure']));
+													} else {
+														echo '';
+													}
+												?></td>                       											
 											<td nowrap>   
 												<a href="job.php?jobid=<?php echo $row['JobID']; ?>#draftsman" class="btn btn-primary btn-xs edit-btn"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
 											</td>
 										</tr>
-										
 									<?php } ?>
 								</tbody>   
 							</table>
-							
 						<?php } else { echo "No records were found."; } ?>
+					</div>
 						</div>
 						<?php 
 						if ($total_pages > 1)
@@ -168,6 +190,11 @@
 		</div>
     </div> <!-- /container -->
 
+	<?php
+	
+
+	?>
+
     <script src="js/jquery-1.11.3.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.validate.min.js"></script>
@@ -184,6 +211,46 @@
 
 			
 		});
+
+		var currentPage = "<?php echo $page;?>";
+		$(document).on('click', '.fa-sort-asc', function(){ 
+			
+			var filtertype = $(this).attr('data-name');
+			var filtersort = $(this).attr('data-sort');
+			type = filtertype;
+			sort = filtersort;
+			ID = filtertype+""+filtersort;
+			showJobs(currentPage,type,sort,ID);
+			
+		});
+
+		$(document).on('click', '.fa-sort-desc', function(){ 
+			
+			var filtertype = $(this).attr('data-name');
+			var filtersort = $(this).attr('data-sort');
+			type = filtertype;
+			sort = filtersort;
+			ID = filtertype+""+filtersort;
+			showJobs(currentPage,type,sort,ID);
+			
+		});
+		function showJobs(page,type=null,sort=null,ID=null){
+			$('#loader-image').show();
+			$('#add-btn').show();
+			$('#searchPanel').show();
+			$('#page-content').hide();
+			$('#alert').hide();
+
+			$('#page-content').load('my-jobs-list.php', "page=" + page + "&type=" + type + "&sort=" + sort, function(){ 
+				$('#loader-image').hide(); 
+				$('#page-content').fadeIn('slow');
+				$('[data-toggle="tooltip"]').tooltip();
+				$('.fa-sort-asc').css('color','');
+				$('.fa-sort-desc').css('color','');
+				$('#'+ID).css('color','red');
+			});
+		}
+
 
 	</script>
 

@@ -25,11 +25,11 @@
 
 	function login($userid, $mysqli) {
 
-	   if ($stmt = $mysqli->prepare("SELECT UserID, FullName, IsForeman, IsDraftsman, IsCNC, IsEdging, IsAssembler, IsInstaller, IsDelivery, IsMaint FROM tblUser WHERE UserID = ? AND Active <> 0 LIMIT 1")) { 
+	   if ($stmt = $mysqli->prepare("SELECT UserID, FullName, IsForeman, IsDraftsman, IsCNC, IsEdging, IsAssembler, IsInstaller, IsDelivery, IsMaint,JobApprove FROM tblUser WHERE UserID = ? AND Active <> 0 LIMIT 1")) { 
 		  $stmt->bind_param('s', $userid);
 		  $stmt->execute();
 		  $stmt->store_result();
-		  $stmt->bind_result($user_id, $full_name, $is_foreman, $is_draftsman, $is_cnc, $is_edging, $is_assembler, $is_installer, $is_delivery, $is_maint);
+		  $stmt->bind_result($user_id, $full_name, $is_foreman, $is_draftsman, $is_cnc, $is_edging, $is_assembler, $is_installer, $is_delivery, $is_maint, $is_JobApprove);
 		  $stmt->fetch();
 	 	
 		  if($stmt->num_rows == 1) { // If the user exists 
@@ -43,6 +43,7 @@
 				$_SESSION['is_installer'] = $is_installer;
 				$_SESSION['is_delivery'] = $is_delivery;
 				$_SESSION['is_maint'] = $is_maint;
+				$_SESSION['is_JobApprove'] = $is_JobApprove;
 				return true;    
 		  } else {
 			 // No user exists. 

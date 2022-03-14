@@ -26,10 +26,10 @@ echo "<h3>WEEK " . $mondaydate . " to " . $fridaydate . "</h3>";
 
 <div class="table-responsive">
 
-    <table id="caltable" class="table table-bordered table-striped">
+    <table id="caltable" class="table table-bordered table-striped bg-info shaded-icon">
         <thead>
             <tr>
-                <th style="width: 15%">Draftsman</th>
+                <!-- <th style="width: 15%">Draftsman</th> -->
                 <th style="width: 17%">MONDAY<br><?php echo $mondaydate; ?></th>
                 <th style="width: 17%">TUESDAY<br><?php echo $tuesdaydate; ?></th>
                 <th style="width: 17%">WEDNESDAY<br><?php echo $wednesdaydate; ?></th>
@@ -44,24 +44,47 @@ echo "<h3>WEEK " . $mondaydate . " to " . $fridaydate . "</h3>";
             $result = $mysqli->query($query);
             
             while($row = $result->fetch_array()){
+            $name_set=1;
             ?>
                 <tr>
-                    <td><strong><?php echo $row['FullName'] ?></strong></td>
+                    <!-- <td><strong><?php echo $row['FullName'] ?></strong></td> -->
                     <?php 
-                        foreach ($datearray as $day){ 
-                            echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'>";
+                        foreach ($datearray as $day)
+                        { 
+                            if($name_set==1)
+                            {
+                                echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'><div class='alert alert-warning name-bg-custom calendar-entry'><strong>".$row['FullName']."</strong></div>";
+                                $name_set++;
+                            }
+                            else
+                            {
+                                echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'>";
+                            }    
+
+                            /*echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'>";*/
                             echo "<button class='btn btn-xs btn-primary pull-right add-entry-btn' value='" . $row['UserID'] . "' data-schedule-date='$day'>+</button>";
-                            $schedulequery = "SELECT tblDrawerSchedule.DrawerScheduleID, tblJob.JobAddress, tblJob.JobID, tblDrawerSchedule.Description FROM tblJob RIGHT JOIN tblDrawerSchedule ON tblJob.JobID = tblDrawerSchedule.JobID WHERE ScheduleDate = '" . date('Y-m-d',strtotime($day)) . "' AND UserID = '" . $row['UserID'] ."' ORDER BY SortOrder";
+                            $schedulequery = "SELECT tblDrawerSchedule.DrawerScheduleID, tblJob.JobAddress, tblJob.JobID, tblDrawerSchedule.Description, tblDrawerSchedule.DrawerType FROM tblJob RIGHT JOIN tblDrawerSchedule ON tblJob.JobID = tblDrawerSchedule.JobID WHERE ScheduleDate = '" . date('Y-m-d',strtotime($day)) . "' AND UserID = '" . $row['UserID'] ."' ORDER BY SortOrder";
                             $scheduleresult = $mysqli->query($schedulequery);
                             
-                            while($schedulerow = $scheduleresult->fetch_array()){
-                                if (!empty($schedulerow['JobID'])){
-   
-                                    echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['DrawerScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['DrawerScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['JobAddress'] . "</div>";                                    
+                            while($schedulerow = $scheduleresult->fetch_array())
+                            {
+                                if($schedulerow['DrawerType'] == 1)
+                                {
+                                    if (!empty($schedulerow['JobID']))
+                                    {
+                                        echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['DrawerScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['DrawerScheduleID'] . "'><span aria-hidden='true'>&times;</span></button><a href='../job.php?jobid=".$schedulerow['JobID']."#draftsman' target='_blank'>".$schedulerow['JobAddress'] . "</a></div>";                                    
+                                    }
+                                    else
+                                    {
+                                        echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['DrawerScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['DrawerScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['Description'] . "</div>";                                    
+                                    }
                                 }
-                                else{
-                                    echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['DrawerScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['DrawerScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['Description'] . "</div>";                                    
+                                else
+                                {
+                                    echo "<div class='alert alert-warning staff-drawers-calendar-edit' data-action='delete' data-drawer-id='" . $schedulerow['DrawerScheduleID'] . "'><button type='button' class='close delete-drawer-staff-btn' aria-label='Close' value='" . $schedulerow['DrawerScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['Description'] . "</div>"; 
                                 }
+                                
+                                
                           
                             }
                             

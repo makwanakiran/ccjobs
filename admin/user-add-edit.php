@@ -14,11 +14,11 @@ if (isset($_POST['action']))
 		
 		$userid = isset($_POST['userid']) ? $_POST['userid'] : die('ERROR: User ID not found.');
 
-		if ($stmt = $mysqli->prepare("SELECT UserID, FullName, Email, IsForeman, IsAssembler, IsInstaller, IsDraftsman, IsCNC, IsEdging, IsDelivery, IsMaint, IsStone, SendAlerts, Active FROM tblUser WHERE UserID = ? LIMIT 1")) { 
+		if ($stmt = $mysqli->prepare("SELECT UserID, FullName, Email, IsForeman, IsAssembler, IsInstaller, IsDraftsman, IsCNC, IsEdging, IsDelivery, IsMaint, IsStone, SendAlerts,JobApprove, Active FROM tblUser WHERE UserID = ? LIMIT 1")) { 
 			$stmt->bind_param('s', $userid);
 			$stmt->execute();
 			$stmt->store_result();
-			$stmt->bind_result($formuserid, $formfullname, $formemail, $formisforeman, $formisassembler, $formisinstaller, $formisdraftsman, $formiscnc, $formisedging, $formisdelivery, $formismaint, $formisstone, $formsendalerts, $formactive);
+			$stmt->bind_result($formuserid, $formfullname, $formemail, $formisforeman, $formisassembler, $formisinstaller, $formisdraftsman, $formiscnc, $formisedging, $formisdelivery, $formismaint, $formisstone, $formsendalerts, $formjobApprove, $formactive);
 			$stmt->fetch();
 		}
 	}
@@ -80,6 +80,10 @@ if (isset($_POST['action']))
     <div class="form-group">
         <label for="inputSendAlerts">Send Email Alerts</label>
         <input name="inputSendAlerts" type="checkbox" value="1" <?php if (isset($formsendalerts)) { if ($formsendalerts==1){ echo " CHECKED"; } } ?>>
+    </div>
+    <div class="form-group">
+        <label for="inputJobApprove">Job Approve</label>
+        <input name="inputJobApprove" type="checkbox" value="1" <?php if (isset($formjobApprove)) { if ($formjobApprove==1){ echo " CHECKED"; } } ?>>
     </div>      
     <div class="form-group">
         <label for="inputActive">Active</label>

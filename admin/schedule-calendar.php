@@ -27,10 +27,10 @@ echo "<h3>WEEK " . $mondaydate . " to " . $saturdaydate . "</h3>";
 
 <div class="table-responsive">
 
-    <table id="caltable" class="table table-bordered table-striped">
+    <table id="caltable" class="table table-bordered table-striped bg-info shaded-icon">
         <thead>
             <tr>
-                <th style="width: 16%">Installer</th>
+                <!-- <th style="width: 16%">Installer</th> -->
                 <th style="width: 14%">MONDAY<br><?php echo $mondaydate; ?></th>
                 <th style="width: 14%">TUESDAY<br><?php echo $tuesdaydate; ?></th>
                 <th style="width: 14%">WEDNESDAY<br><?php echo $wednesdaydate; ?></th>
@@ -46,37 +46,78 @@ echo "<h3>WEEK " . $mondaydate . " to " . $saturdaydate . "</h3>";
             $result = $mysqli->query($query);
             
             while($row = $result->fetch_array()){
+            $name_set = 1;
             ?>
                 <tr>
-                    <td><strong><?php echo $row['FullName'] ?></strong></td>
+                    <!-- <td><strong><?php echo $row['FullName'] ?></strong></td> -->
                     <?php 
-                        foreach ($datearray as $day){ 
-                            echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'>";
-                            echo "<button class='btn btn-xs btn-primary pull-right add-entry-btn' value='" . $row['UserID'] . "' data-schedule-date='$day'>+</button>";
-                            $schedulequery = "SELECT tblSchedule.ScheduleID, tblJob.JobAddress, tblJob.JobID, tblSchedule.Description FROM tblJob RIGHT JOIN tblSchedule ON tblJob.JobID = tblSchedule.JobID WHERE ScheduleDate = '" . date('Y-m-d',strtotime($day)) . "' AND UserID = '" . $row['UserID'] ."' ORDER BY SortOrder";
+                        foreach ($datearray as $day)
+                        { 
+                            if($name_set==1)
+                            {
+                                echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'><div class='alert alert-warning name-bg-custom calendar-entry'><strong>".$row['FullName']."</strong></div>";
+                                $name_set++;
+                            }
+                            else
+                            {
+                                echo "<td class='entry' data-user-id='" . $row['UserID'] . "' data-date='" . date('Y-m-d',strtotime($day)) . "'>";
+                            }
+
+                            $schedulequery = "SELECT tblSchedule.ScheduleID, tblJob.JobAddress, tblJob.JobID, tblSchedule.Description, tblSchedule.ScheduleType FROM tblJob RIGHT JOIN tblSchedule ON tblJob.JobID = tblSchedule.JobID WHERE ScheduleDate = '" . date('Y-m-d',strtotime($day)) . "' AND UserID = '" . $row['UserID'] ."' ORDER BY SortOrder";
                             $scheduleresult = $mysqli->query($schedulequery);
                             
-                            while($schedulerow = $scheduleresult->fetch_array()){
-                                if (!empty($schedulerow['JobID'])){
-                                    //check assembly completed
-                                    $statusquery = "SELECT SUM(Weight) As SumWeight FROM tblJobTask INNER JOIN tblTask ON tblJobTask.TaskID = tblTask.TaskID WHERE JobID = " . $schedulerow['JobID'] . " AND tblJobTask.DateCompleted IS NOT NULL";
-                                    $statusresult = $mysqli->query($statusquery);
-                                    $statusrow = $statusresult->fetch_array();
+                            while($schedulerow = $scheduleresult->fetch_array())
+                            {
+                                if($schedulerow['ScheduleType']==1)
+                                {
+                                    echo "<button class='btn btn-xs btn-primary pull-right add-entry-btn' value='" . $row['UserID'] . "' data-schedule-date='$day'>+</button>";
+                                    if (!empty($schedulerow['JobID']))
+                                    {
+                                        //check assembly completed
+                                        $statusquery = "SELECT SUM(Weight) As SumWeight FROM tblJobTask INNER JOIN tblTask ON tblJobTask.TaskID = tblTask.TaskID WHERE JobID = " . $schedulerow['JobID'] . " AND tblJobTask.DateCompleted IS NOT NULL";
+                                        $statusresult = $mysqli->query($statusquery);
+                                        $statusrow = $statusresult->fetch_array();
 
-                                    $incompletequery = "SELECT Count(JobID) As JobCount FROM tblJobTask WHERE JobID = " . $schedulerow['JobID'] . " AND tblJobTask.DateCompleted IS NULL";
-                                    $incompleteresult = $mysqli->query($incompletequery);
-                                    $incompleterow = $incompleteresult->fetch_array();
-                                    
-                                    if ($statusrow['SumWeight'] < 1 || $incompleterow['JobCount'] > 0)
-                                        $alertstring = "<span class='fa fa-1x fa-warning text-danger'></span>";
-                                    else   
-                                        $alertstring = "<span class='fa fa-1x fa-check text-success'></span>";
-
-                                    echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['ScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['ScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $alertstring . " " . $schedulerow['JobAddress'] . "</div>";
+                                        $incompletequery = "SELECT Count(JobID) As JobCount FROM tblJobTask WHERE JobID = " . $schedulerow['JobID'] . " AND tblJobTask.DateCompleted IS NULL";
+                                        $incompleteresult = $mysqli->query($incompletequery);
+                                        $incompleterow = $incompleteresult->fetch_array();
                                         
+                                        if ($statusrow['SumWeight'] < 1 || $incompleterow['JobCount'] > 0)
+                                            $alertstring = "<span class='fa fa-1x fa-warning text-danger'></span>";
+                                        else   
+                                            $alertstring = "<span class='fa fa-1x fa-check text-success'></span>";
+
+
+                                        $Color_query = "SELECT  MissingItems as MissingItemsColor FROM tblJobTaskInstall WHERE JobID = " . $schedulerow['JobID'] ;
+                                        $Color_result = $mysqli->query($Color_query);
+                                        $Color_row = $Color_result->fetch_array();
+                                        
+    
+                                        if($Color_result == null)
+                                        {
+                                            if($Color_row['MissingItemsColor'] == null)
+                                                $colorPart = 'alert-success';
+                                            else
+                                                $colorPart = 'alert-warning';
+                                        }else
+                                        {
+    
+                                                $colorPart = 'alert-success';
+                                        }    
+
+                                        echo "<div class='alert ".$colorPart." calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['ScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['ScheduleID'] . "'><span aria-hidden='true'>&times;</span></button><a href='../job.php?jobid=".$schedulerow['JobID']."#installer' target='_blank>" . $alertstring . " " . $schedulerow['JobAddress'] . "</a></div>";
+                                            
+                                    }
+                                    else
+                                    {
+                                        echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['ScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['ScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['Description'] . "</div>";                                    
+                                    }
                                 }
-                                else{
-                                    echo "<div class='alert alert-warning calendar-entry' data-action='edit' data-schedule-id='" . $schedulerow['ScheduleID'] . "'><button type='button' class='close delete-btn' aria-label='Close' value='" . $schedulerow['ScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['Description'] . "</div>";                                    
+                                else
+                                {
+                                     echo "<button class='btn btn-xs btn-primary pull-right add-entry-btn' data-schedule-id='" . $schedulerow['ScheduleID'] . "' value='" . $row['UserID'] . "' data-schedule-date='$day'>+</button>";
+
+                                    echo "<div class='alert alert-warning staff-schedule-edit' data-action='delete' data-schedule-id='" . $schedulerow['ScheduleID'] . "'><button type='button' class='close delete-schedule-staff-btn' aria-label='Close' value='" . $schedulerow['ScheduleID'] . "'><span aria-hidden='true'>&times;</span></button>" . $schedulerow['Description'] . "</div>";  
                                 }
 
                             

@@ -189,3 +189,34 @@ input[readonly] {
 	top: 5px;
 	right: 8px;
 }
+
+.collapse{display:none}.collapse.in{display:block}
+
+@media(min-width: 1366px){
+  /*Laptop and PC Screen*/
+
+  .l-75{
+    margin-left: 75%;
+  }
+  .l-70{
+    margin-left: 70%;
+  }
+}
+
+
+.fa-sort-desc{
+	font-size: 20px !important;
+	cursor: pointer;
+	height: 0;
+}
+
+.fa-sort-asc{
+	font-size: 20px !important;
+	cursor: pointer;
+	height: 5px;
+}
+
+.sort-icon{
+	display: inline-grid;
+	margin-left: 5px;
+}

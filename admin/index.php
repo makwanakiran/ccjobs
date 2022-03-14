@@ -20,13 +20,13 @@ include("header.php");
 </div>
 
 
-<a href="jobs.php" class="btn btn-default"><span class="glyphicon glyphicon-wrench" style="font-size: 120px;"></span><br>Jobs</a>
-<a href="schedule.php" class="btn btn-default"><span class="glyphicon glyphicon-calendar" style="font-size: 120px;"></span><br>Schedule</a>
-<a href="delivery.php" class="btn btn-default"><span class="glyphicon glyphicon-road" style="font-size: 120px;"></span><br>Delivery</a>
-<a href="reports-assemblers.php" class="btn btn-default"><span class="glyphicon glyphicon-list-alt" style="font-size: 120px;"></span><br>Reports</a>
-<a href="users.php" class="btn btn-default"><span class="glyphicon glyphicon-user" style="font-size: 120px;"></span><br>Users</a>
-<a href="admin_users.php" class="btn btn-default"><span class="glyphicon glyphicon-cog" style="font-size: 120px;"></span><br>Admin Users</a>
-<a href="logout.php" class="btn btn-default"><span class="glyphicon glyphicon-log-out" style="font-size: 120px;"></span><br>Log Out</a>
+<!-- <a style="margin-top: 2%;" href="jobs.php" class="btn btn-primary"><span class="glyphicon glyphicon-wrench" style="font-size: 120px; "></span><br>Jobs</a>
+<a style="margin-top: 2%;" href="schedule.php" class="btn btn-info"><span class="glyphicon glyphicon-calendar" style="font-size: 120px; "></span><br>Schedule</a>
+<a style="margin-top: 2%;" href="delivery.php" class="btn btn-primary"><span class="glyphicon glyphicon-road" style="font-size: 120px; "></span><br>Delivery</a>
+<a style="margin-top: 2%;" href="reports-assemblers.php" class="btn btn-info"><span class="glyphicon glyphicon-list-alt" style="font-size: 120px; "></span><br>Reports</a>
+<a style="margin-top: 2%;" href="users.php" class="btn btn-primary"><span class="glyphicon glyphicon-user" style="font-size: 120px; "></span><br>Users</a>
+<a style="margin-top: 2%;" href="admin_users.php" class="btn btn-info"><span class="glyphicon glyphicon-cog" style="font-size: 120px; "></span><br>Admin Users</a>
+<a style="margin-top: 2%;" href="logout.php" class="btn btn-primary"><span class="glyphicon glyphicon-log-out" style="font-size: 120px; "></span><br>Log Out</a> -->
 
 
 

@@ -18,6 +18,7 @@ include("header.php");
 <div class="page-header">
     <h1>
       <span id="pageTitle">Assembler Schedule</span>
+      <button type="button" id="assembler-staff-add" class="btn btn-primary pull-right" style="margin-left:1%;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Staff Add</button>
       <button type="button" id="add-btn" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New</button>
     </h1>
 </div>
@@ -45,13 +46,34 @@ include("header.php");
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- Staff add/edit modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="assembler-staff-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+	  	<div id="assembler-staff-modal-alert"></div>
+	  	<div id='assembler-staff-modal-content'></div>
+	  	<div id='assembler-staff-modal-loader-image'><img src='img/ajax-loader.gif' /> &nbsp;LOADING</div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Staff add/edit modal -->
+
 <script type='text/javascript'>
 
 	$('form').on('submit', function(e){
 		e.preventDefault();
 	});
 	
-	$(document).ready(function(){
+	$(document).ready(function()
+	{
 
 		showWeek();
 		
@@ -59,6 +81,10 @@ include("header.php");
 
 		$('#add-btn').click(function(){
 			addEditSchedule("add", 0);
+		});
+
+		$('#assembler-staff-add').click(function(){
+			AssemblerStaffAddEdit("add", 0);
 		});
 
 		function showWeek(weekStart){
@@ -77,7 +103,17 @@ include("header.php");
 					containment: "#caltable",
 					update: function(event, ui){
 
+						/*var scheduleid = ui.item.attr('data-schedule-id');*/
 						var scheduleid = ui.item.attr('data-schedule-id');
+						if(scheduleid==undefined)
+						{
+							scheduleid = ui.item.attr('data-assembler-id');
+							var sortorder = $(this).sortable("toArray", {attribute: "data-assembler-id"});
+						}
+						else
+						{
+							var sortorder = $(this).sortable("toArray", {attribute: "data-schedule-id"});
+						}
 						var userid = $(this).attr('data-user-id');
 						var scheduledate = $(this).attr('data-date');
 						
@@ -88,7 +124,7 @@ include("header.php");
 									//showWeek(currentWeekStart);
 								});
 						}
-						var sortorder = $(this).sortable("toArray", {attribute: "data-schedule-id"});
+						//var sortorder = $(this).sortable("toArray", {attribute: "data-schedule-id"});
 						
 						$.post("assembler-crud.php", {action: "sort", sortorder: sortorder})
 							.done(function(data) {
@@ -115,12 +151,26 @@ include("header.php");
 				});
 
 				$('.add-entry-btn').click(function(){
-					
 					var scheduledate = $(this).attr("data-schedule-date");
 					var userid = $(this).val();
-
 					addEditSchedule("add", 0, scheduledate, userid);
 
+				});
+
+
+				$('.assembler-staff-delete-btn').click(function(){
+					deleteAssemblerStaff($(this).val());
+				});
+
+				$('.assembler-staff-week-btn').click(function(){
+					event.preventDefault();
+					currentWeekStart = $(this).val();
+					showWeek($(this).val());
+				});
+
+				$('.assembler-staff-calendar-entry').dblclick(function () {
+					var assemblerid = $(this).attr('data-assembler-id');
+					AssemblerStaffAddEdit("edit", assemblerid);
 				});
 
 			});
@@ -256,9 +306,87 @@ include("header.php");
 			return this.optional(element) || moment(value, 'DD/MM/YYYY').isValid();
 		};
 
-    
-	});
+
+	function AssemblerStaffAddEdit(action, assemblerid)
+	{
+		$('#assembler-staff-modal-content').load('assembler-staff-add-edit.php', { action: action, assemblerid: assemblerid }, function()
+		{ 
+			if (action == "add")
+				$("#assembler-staff-modal").find('.modal-title').text('Add Staff Entry')
+			else if (action == "edit")
+				$("#assembler-staff-modal").find('.modal-title').text('Edit Staff Entry')
+
+			$('#assembler-staff-modal-loader-image').hide(); 
+			$('#assembler-staff-modal-content').fadeIn('slow');
+			
+			$("#assembler-staff-form").validate({
+				rules: {
+					inputDescription: {
+						required: "#inputDescription:blank"
+					},
+					inputJobID: {
+						required: "#inputJobID:blank"
+					}
+				}
+			});
+			
+			$('.selectpicker').selectpicker({liveSearch: true});
+			$('input[name="inputAssemblerDate"]').daterangepicker({format: 'DD-MM-YYYY' , singleDatePicker: true,showDropdowns: true});
+
+			if (action == "edit")
+			{
+				$.post("assembler-staff-crud.php", { action: 'edit', 'assemblerid': assemblerid }) 
+					.done(function(data){
+					var response = JSON.parse(data);
+					$("#inputUserID").val(response.UserId);
+					$("#inputAssemblerDate").val(response.AssemblerDate);
+					$("#assemblerid").val(response.AssemblerId);
+					$("#inputDescription").val(response.Description);
+					$("#inputNotes").val(response.Notes);
+					$("#action").val('update');
+				});
+			}
+
+			$('#assembler-delete-btn').click(function(){
+				deleteAssemblerStaff($(this).val());
+			});
+
+			$('#assembler-staff-modal').modal('show');
+
+		});
+	}
 	
+	$(document).on('submit', '#assembler-staff-form', function() {
+		$('#modal-content').hide();
+		$('#modal-loader-image').show();
+		 
+		$.post("assembler-staff-crud.php", $(this).serialize())
+			.done(function(data) {
+				$('#assembler-staff-modal').modal('hide');
+				showWeek(currentWeekStart);
+			});
+		return false;
+	});
+
+	function deleteAssemblerStaff(deleteid){
+		$.confirm({
+			text: "Are you sure you want to delete this assembler staff entry?",
+			confirm: function() {			
+				
+				$.post("assembler-staff-crud.php", { action: 'delete', deleteid: deleteid }) 
+					.done(function(data){
+						$('#assembler-staff-modal').modal('hide');
+						showWeek(currentWeekStart);
+				});
+			},
+			cancel: function() {
+				// nothing to do
+			}
+		});
+	}
+});
+		
+
 </script>
 
 <?php include("footer.php"); ?>

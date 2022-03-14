@@ -18,6 +18,7 @@ include("header.php");
 <div class="page-header">
     <h1>
       <span id="pageTitle">Delivery Schedule</span>
+      <button type="button" id="delivery-staff-add" class="btn btn-primary pull-right" style="margin-left: 1%;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Staff Add</button>
       <button type="button" id="add-btn" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New</button>
     </h1>
 </div>
@@ -45,6 +46,27 @@ include("header.php");
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- Staff add/edit modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="delivery-staff-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+	  	<div id="delivery-staff-modal-alert"></div>
+	  	<div id='delivery-staff-modal-content'></div>
+	  	<div id='delivery-staff-modal-loader-image'><img src='img/ajax-loader.gif' /> &nbsp;LOADING</div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Staff add/edit modal -->
+
+
 <script type='text/javascript'>
 
 	$('form').on('submit', function(e){
@@ -60,6 +82,12 @@ include("header.php");
 		$('#add-btn').click(function(){
 			addEditDelivery("add", 0);
 		});
+
+		$('#delivery-staff-add').click(function(){
+			DeliveryStaffAddEdit("add", 0);
+		});
+
+
 
 		function showWeek(weekStart){
 			$('#loader-image').show();
@@ -114,12 +142,32 @@ include("header.php");
 				});
 
 				$('.add-entry-btn').click(function(){
-					
 					var deliverydate = $(this).attr("data-delivery-date");
-
 					addEditDelivery("add", 0, deliverydate);
-
 				});
+
+
+
+				$('.delete-delivery-staff-btn').click(function(){
+					deleteStaffDelivery($(this).val());
+				});
+
+				$('.delivery-week-btn').click(function(){
+					event.preventDefault();
+					currentWeekStart = $(this).val();
+					showWeek($(this).val());
+				});
+
+				$('.staff-delivery-calendar-edit').dblclick(function () {
+					var deliveryid = $(this).attr('data-delivery-id');
+					DeliveryStaffAddEdit("edit", deliveryid);
+				});
+				/*
+				$('.delivery-add-entry-btn').click(function(){
+					var deliverydate = $(this).attr("data-delivery-date");
+					var userid = $(this).val();
+					DeliveryStaffAddEdit("add", 0, deliverydate, userid);
+				});*/
 
 			});
 		}
@@ -250,10 +298,91 @@ include("header.php");
 		$.validator.methods.date = function (value, element) {
 			return this.optional(element) || moment(value, 'DD/MM/YYYY').isValid();
 		};
+		function DeliveryStaffAddEdit(action, deliveryid)
+		{
+			$('#delivery-staff-modal-content').load('delivery-staff-add-edit.php', { action: action, deliveryid: deliveryid }, function()
+			{ 
+				if (action == "add")
+					$("#delivery-staff-modal").find('.modal-title').text('Add Staff Entry')
+				else if (action == "edit")
+					$("#delivery-staff-modal").find('.modal-title').text('Edit Staff Entry')
 
-    
+				$('#delivery-staff-modal-loader-image').hide(); 
+				$('#delivery-staff-modal-content').fadeIn('slow');
+				
+				$("#delivery-staff-form").validate({
+					rules: {
+						inputJobID: {
+							required: "#inputDescription:blank"
+						},
+						inputDescription: {
+							required: "#inputJobID:blank"
+						}
+					}
+				});
+				$('.selectpicker').selectpicker({liveSearch: true});
+				$('input[name="inputDeliveryDate"]').daterangepicker({format: 'DD-MM-YYYY' , singleDatePicker: true,showDropdowns: true});
+				
+				$('#delivery-delete-btn').click(function(){
+					deleteStaffDelivery($(this).val());
+				});
+
+				$('#viewjob-btn').click(function(){
+					if ($("#inputJobID").val() != "")
+						window.open('../job.php?jobid='+$("#inputJobID").val()+'#installer', '_blank');
+
+				});
+
+				if (action == "edit")
+				{
+					$.post("delivery-staff-crud.php", { action: 'edit', 'deliveryid': deliveryid }) 
+						.done(function(data){
+						var response = JSON.parse(data);
+						$("#inputJobID").val(response.JobID).trigger('change');
+						$("#inputDeliveryDate").val(response.DeliveryDate);
+						$("#inputDescription").val(response.Description);
+						$("#inputNotes").val(response.Notes);
+						$("#action").val('update');
+					});
+				}
+
+
+				$('#delivery-staff-modal').modal('show');
+
+			});
+		}
+
+		$(document).on('submit', '#delivery-staff-form', function() {
+			$('#modal-content').hide();
+			$('#modal-loader-image').show();
+			 
+			$.post("delivery-staff-crud.php", $(this).serialize())
+				.done(function(data) {
+					$('#delivery-staff-modal').modal('hide');
+					showWeek(currentWeekStart);
+					
+				});
+					 
+			return false;
+		});
+		
+		
+		function deleteStaffDelivery(deleteid){
+			$.confirm({
+				text: "Are you sure you want to delete this delivery staff entry?",
+				confirm: function() {			
+					$.post("delivery-staff-crud.php", { action: 'delete', deleteid: deleteid }) 
+						.done(function(data){
+							$('#delivery-staff-modal').modal('hide');
+							showWeek(currentWeekStart);
+					});
+				},
+				cancel: function() {
+					// nothing to do
+				}
+			});
+		}
 	});
-	
 </script>
 
 <?php include("footer.php"); ?>

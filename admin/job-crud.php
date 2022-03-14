@@ -37,7 +37,7 @@ if (isset($_POST['action'])){
 			$data['msg'] = "<div class='alert alert-danger' role='alert'>The job could not be added</div>";
 			$data['action'] = "add";
 		}
-		print_r($insert_stmt);
+		
 			
 		echo json_encode($data);
 	}
@@ -51,7 +51,8 @@ if (isset($_POST['action'])){
 		$datemeasure = (!empty($_POST['inputDateMeasure'])) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inputDateMeasure']))) : NULL;
 		$measureby = $_POST['inputMeasureBy'];
 		$ProjectID = $_POST['projectId'];
-		
+		$status = $_POST['status'];
+
 		//check if measure by has changed
 		$query = "SELECT MeasureBy FROM tblJob WHERE JobID = $jobid";
         $result = $mysqli->query($query);
@@ -62,10 +63,12 @@ if (isset($_POST['action'])){
 		else
 			$sendemail = false;
 
-		$update_stmt = $mysqli->prepare("UPDATE tblJob SET ProjectID = ?, JobAddress = ?, Builder = ?, DateMeasure = ?, MeasureBy = ? WHERE JobID = ?"); 
-		$update_stmt->bind_param('issssi', $ProjectID, $address, $builder, $datemeasure, $measureby, $jobid); 
+		$update_stmt = $mysqli->prepare("UPDATE tblJob SET ProjectID = ?, JobAddress = ?, Builder = ?, DateMeasure = ?, MeasureBy = ?, status = ? WHERE JobID = ?");
+
+		$update_stmt->bind_param('issssii', $ProjectID, $address, $builder, $datemeasure, $measureby, $status, $jobid); 
 		$update_stmt->execute();
 		
+
 		if ($update_stmt->affected_rows != -1){
 			$data['msg'] = "<div class='alert alert-success' role='alert'>The job was updated successfully.</div>";
 			$data['last_insert_id'] = $jobid;

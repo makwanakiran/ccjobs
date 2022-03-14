@@ -26,10 +26,11 @@ if (isset($_POST['action'])){
 		$ismaint = isset($_POST['inputIsMaint']) ? $_POST['inputIsMaint'] : 0;
 		$isstone = isset($_POST['inputIsStone']) ? $_POST['inputIsStone'] : 0;
 		$sendalerts = isset($_POST['inputSendAlerts']) ? $_POST['inputSendAlerts'] : 0;
+		$jobApprove = isset($_POST['inputJobApprove']) ? $_POST['inputJobApprove'] : 0;
 		$active = isset($_POST['inputActive']) ? $_POST['inputActive'] : 0;
-			
-		$insert_stmt = $mysqli->prepare("INSERT INTO tblUser (FullName, UserID, Email, IsForeman, IsDraftsman, IsCNC, IsEdging, IsAssembler, IsInstaller, IsDelivery, IsMaint, IsStone, SendAlerts, Active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		$insert_stmt->bind_param('sssiiiiiiiiiii', $name, $username, $email, $isforeman, $isdraftsman, $iscnc, $isedging, $isassembler, $isinstaller, $isdelivery, $ismaint, $isstone, $sendalerts, $active); 
+
+		$insert_stmt = $mysqli->prepare("INSERT INTO tblUser (FullName, UserID, Email, IsForeman, IsDraftsman, IsCNC, IsEdging, IsAssembler, IsInstaller, IsDelivery, IsMaint, IsStone, SendAlerts,JobApprove, Active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		$insert_stmt->bind_param('sssiiiiiiiiiiii', $name, $username, $email, $isforeman, $isdraftsman, $iscnc, $isedging, $isassembler, $isinstaller, $isdelivery, $ismaint, $isstone, $sendalerts,$jobApprove, $active); 
 		$insert_stmt->execute();
 				
 		if ($insert_stmt->affected_rows != -1){
@@ -62,10 +63,11 @@ if (isset($_POST['action'])){
 		$ismaint = isset($_POST['inputIsMaint']) ? $_POST['inputIsMaint'] : 0;	
 		$isstone = isset($_POST['inputIsStone']) ? $_POST['inputIsStone'] : 0;	
 		$sendalerts = isset($_POST['inputSendAlerts']) ? $_POST['inputSendAlerts'] : 0;
+		$jobApprove = isset($_POST['inputJobApprove']) ? $_POST['inputJobApprove'] : 0;
 		$active = isset($_POST['inputActive']) ? $_POST['inputActive'] : 0;
 		
-		$update_stmt = $mysqli->prepare("UPDATE tblUser SET FullName = ?, UserID = ?, Email = ?, IsForeman = ?, IsDraftsman = ?, IsCNC = ?, IsEdging = ?, IsAssembler = ?, IsInstaller = ?, IsDelivery = ?, IsMaint = ?, IsStone = ?, SendAlerts = ?, Active = ? WHERE UserID = ?"); 
-		$update_stmt->bind_param('sssiiiiiiiiiiis', $name, $username, $email, $isforeman, $isdraftsman, $iscnc, $isedging, $isassembler, $isinstaller, $isdelivery, $ismaint, $isstone, $sendalerts, $active, $userid); 
+		$update_stmt = $mysqli->prepare("UPDATE tblUser SET FullName = ?, UserID = ?, Email = ?, IsForeman = ?, IsDraftsman = ?, IsCNC = ?, IsEdging = ?, IsAssembler = ?, IsInstaller = ?, IsDelivery = ?, IsMaint = ?, IsStone = ?, SendAlerts = ?, JobApprove = ?, Active = ? WHERE UserID = ?"); 
+		$update_stmt->bind_param('sssiiiiiiiiiiiis', $name, $username, $email, $isforeman, $isdraftsman, $iscnc, $isedging, $isassembler, $isinstaller, $isdelivery, $ismaint, $isstone, $sendalerts,$jobApprove,$active, $userid); 
 		$update_stmt->execute();
 		
 		if ($update_stmt->affected_rows != -1){

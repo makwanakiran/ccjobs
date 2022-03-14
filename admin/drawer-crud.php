@@ -18,9 +18,10 @@ if (isset($_POST['action'])){
 		$description = $_POST['inputDescription'];
 		$scheduledate = (!empty($_POST['inputScheduleDate'])) ? date("Y-m-d", strtotime(str_replace('/', '-', $_POST['inputScheduleDate']))) : NULL;
 		$notes = $_POST['inputNotes'];
+		$DrawerType = 1;
 
-		$insert_stmt = $mysqli->prepare("INSERT INTO tblDrawerSchedule (UserID, JobID, Description, ScheduleDate, Notes) VALUES (?, ?, ?, ?, ?)");
-		$insert_stmt->bind_param('sisss', $userid, $jobid, $description, $scheduledate, $notes); 
+		$insert_stmt = $mysqli->prepare("INSERT INTO tblDrawerSchedule (UserID, JobID, Description, ScheduleDate, Notes, DrawerType) VALUES (?, ?, ?, ?, ?, ?)");
+		$insert_stmt->bind_param('sisssi', $userid, $jobid, $description, $scheduledate, $notes, $DrawerType); 
 		$insert_stmt->execute();
 				
 		if ($insert_stmt->affected_rows != -1){
@@ -91,7 +92,6 @@ if (isset($_POST['action'])){
 	if ($_POST['action'] == "sort"){
 		if (isset($_POST['sortorder'])){
 			$sortorder = $_POST['sortorder'];
-
 			$sort = 1;
 			foreach ($sortorder as $drawerscheduleid){
 				$update_stmt = $mysqli->prepare("UPDATE tblDrawerSchedule SET SortOrder = ? WHERE DrawerScheduleID = ?"); 
@@ -102,6 +102,7 @@ if (isset($_POST['action'])){
 			}
 		}
 	}
+
 
 	//delete a schedule entry
 	if ($_POST['action'] == "delete"){

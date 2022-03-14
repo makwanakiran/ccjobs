@@ -18,7 +18,7 @@ include("header.php");
 <div class="page-header">
     <h1>
       <span id="pageTitle">Projects</span>
-      <button type="button" id="add-btn" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New</button>
+      <button type="button" id="add-btn" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Project</button>
       
     </h1>
 </div>
@@ -181,3 +181,5 @@ include("header.php");
     });
     
 </script>
+
+<?php include("footer.php"); ?>

@@ -118,7 +118,7 @@ if (isset($_POST['action'])){
 
 			$jobid = $_POST['jobid'];
 			$taskid = $_POST['taskid'];
-			$copyplans = isset($_POST['inputCopyPlans']) ? $_POST['inputCopyPlans'] : 0;
+			/*$copyplans = isset($_POST['inputCopyPlans']) ? $_POST['inputCopyPlans'] : 0;
 			$quickclips = isset($_POST['inputQuickClips']) ? $_POST['inputQuickClips'] : 0;
 			$whitecaps = isset($_POST['inputWhiteCaps']) ? $_POST['inputWhiteCaps'] : 0;
 			$sinkcutouts = isset($_POST['inputSinkCutouts']) ? $_POST['inputSinkCutouts'] : 0;
@@ -140,10 +140,12 @@ if (isset($_POST['action'])){
 			$checkrails = isset($_POST['inputCheckRails']) ? $_POST['inputCheckRails'] : 0;
 			$kickboardsnumbered = isset($_POST['inputKickboardsNumbered']) ? $_POST['inputKickboardsNumbered'] : 0;
 			$dishwasherangle = isset($_POST['inputDishwasherAngle']) ? $_POST['inputDishwasherAngle'] : 0;
-			$templates = isset($_POST['inputTemplates']) ? $_POST['inputTemplates'] : 0;
+			$templates = isset($_POST['inputTemplates']) ? $_POST['inputTemplates'] : 0;*/
 		
 			$missingitems = trim($_POST['inputMissingItems']);
-			$missingitemscomplete = isset($_POST['inputMissingItemsComplete']) ? $_POST['inputMissingItemsComplete'] : 0;
+			$Applicabletems = trim($_POST['inputApplicableItems']);
+			//$missingitemscomplete = isset($_POST['inputMissingItemsComplete']) ? $_POST['inputMissingItemsComplete'] : 0;
+			$missingitemscomplete =  0;
 
 			//check if date checked has already been set
 			//$query = "SELECT DateChecked, CheckedBy FROM tblJobTask WHERE JobID = $jobid AND TaskID = $taskid";
@@ -159,8 +161,10 @@ if (isset($_POST['action'])){
 				$checkedby = $_SESSION['user_id'];
 			//}
 
-			$update_stmt = $mysqli->prepare("UPDATE tblJobTask SET CopyPlans = ?, QuickClips = ?, WhiteCaps = ?, SinkCutouts = ?, HotplateCutouts = ?, BasesPelmets = ?, AppliancesFitted = ?, CutleryTrays = ?, WorkersName = ?, CabinetLabelled = ?, StickersRemoved = ?, AllAccessories = ?, HandlesMounted = ?, BumpOns = ?, MeasureOverallSizes = ?, OverheadCleats = ?, KitchenInspected = ?, SoftClosers = ?, BlocksKickboards = ?, CheckRails = ?, KickboardsNumbered = ?, DishwasherAngle = ?, Templates = ?, MissingItems = ?, MissingItemsComplete = ?, DateChecked = ?, CheckedBy = ? WHERE JobID = ? AND TaskID = ?");
-			$update_stmt->bind_param('iiiiiiiiiiiiiiiiiiiiiiisissii', $copyplans, $quickclips, $whitecaps, $sinkcutouts, $hotplatecutouts, $basespelmets, $appliancesfitted, $cutlerytrays, $workersname, $cabinetlabelled, $stickersremoved, $allaccessories, $handlesmounted, $bumpons, $measureoverallsizes, $overheadcleats, $kitcheninspected, $softclosers, $blockskickboards, $checkrails, $kickboardsnumbered, $dishwasherangle, $templates, $missingitems, $missingitemscomplete, $datechecked, $checkedby, $jobid, $taskid); 
+			/*$update_stmt = $mysqli->prepare("UPDATE tblJobTask SET CopyPlans = ?, QuickClips = ?, WhiteCaps = ?, SinkCutouts = ?, HotplateCutouts = ?, BasesPelmets = ?, AppliancesFitted = ?, CutleryTrays = ?, WorkersName = ?, CabinetLabelled = ?, StickersRemoved = ?, AllAccessories = ?, HandlesMounted = ?, BumpOns = ?, MeasureOverallSizes = ?, OverheadCleats = ?, KitchenInspected = ?, SoftClosers = ?, BlocksKickboards = ?, CheckRails = ?, KickboardsNumbered = ?, DishwasherAngle = ?, Templates = ?, MissingItems = ?, MissingItemsComplete = ?, DateChecked = ?, CheckedBy = ? WHERE JobID = ? AND TaskID = ?");
+			$update_stmt->bind_param('iiiiiiiiiiiiiiiiiiiiiiisissii', $copyplans, $quickclips, $whitecaps, $sinkcutouts, $hotplatecutouts, $basespelmets, $appliancesfitted, $cutlerytrays, $workersname, $cabinetlabelled, $stickersremoved, $allaccessories, $handlesmounted, $bumpons, $measureoverallsizes, $overheadcleats, $kitcheninspected, $softclosers, $blockskickboards, $checkrails, $kickboardsnumbered, $dishwasherangle, $templates, $missingitems, $missingitemscomplete, $datechecked, $checkedby, $jobid, $taskid);*/
+			$update_stmt = $mysqli->prepare("UPDATE tblJobTask SET Applicabletems = ?,  MissingItems = ?, MissingItemsComplete = ?, DateChecked = ?, CheckedBy = ? WHERE JobID = ? AND TaskID = ?");
+			$update_stmt->bind_param('ssissii', $Applicabletems, $missingitems, $missingitemscomplete, $datechecked, $checkedby, $jobid, $taskid); 
 			$update_stmt->execute();
 					
 			if ($update_stmt->affected_rows != -1){
